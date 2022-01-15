@@ -30,17 +30,17 @@ public struct AZSlider<Value: BinaryFloatingPoint,
     @State private var lastOffset: CGFloat = 0
     @State private var trackSize: CGSize = .zero
     
-    init(value: Binding<Value>,
-         in bounds: ClosedRange<Value>,
-         step: Value = 0.001,
-         minimumValueLabel: Text? = nil,
-         maximumValueLabel: Text? = nil,
-         didStartDragging: ((_ value: Value) -> Void)? = nil,
-         didStopDragging: ((_ value: Value) -> Void)? = nil,
-         track: @escaping () -> Track,
-         fill: (() -> Fill)?,
-         thumb: @escaping () -> Thumb,
-         thumbSize: CGSize) {
+    public init(value: Binding<Value>,
+                in bounds: ClosedRange<Value>,
+                step: Value = 0.001,
+                minimumValueLabel: Text? = nil,
+                maximumValueLabel: Text? = nil,
+                didStartDragging: ((_ value: Value) -> Void)? = nil,
+                didStopDragging: ((_ value: Value) -> Void)? = nil,
+                track: @escaping () -> Track,
+                fill: (() -> Fill)?,
+                thumb: @escaping () -> Thumb,
+                thumbSize: CGSize) {
         _value = value
         self.bounds = bounds
         self.step = step
