@@ -89,7 +89,6 @@ public struct AZSlider<Value: BinaryFloatingPoint,
             sliderTrack
             sliderFill
         }
-        .frame(width: trackSize.width, height: trackSize.height)
         .overlay(sliderThumb, alignment: .leading)
     }
     
@@ -163,19 +162,21 @@ public struct AZSlider<Value: BinaryFloatingPoint,
     }
 }
 
-struct AZSlider_Previews: PreviewProvider {
-    static var thumbRadius: CGFloat = 12
-    static var horizontalPadding: CGFloat = 16
+struct AZSlider_Previews_Container: View {
+    var thumbRadius: CGFloat = 12
+    var horizontalPadding: CGFloat = 16
+    @State var value: Double = 0
     
-    static var previews: some View {
-        AZSlider(value: Binding.constant(50),
+    var body: some View {
+        AZSlider(value: $value,
                  in: 0...100,
                  minimumValueLabel: Text("0").font(.caption),
                  maximumValueLabel: Text("100").font(.caption),
                  track: {
-            Capsule()
-                .foregroundColor(.gray)
-                .frame(width: UIScreen.main.bounds.width-2*horizontalPadding, height: 4)
+                Capsule()
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, maxHeight: 4)
+                    .fixedSize(horizontal: false, vertical: true)
         }, fill: {
             Capsule()
                 .foregroundColor(.blue)
@@ -185,5 +186,11 @@ struct AZSlider_Previews: PreviewProvider {
                 .shadow(radius: thumbRadius/1)
         }, thumbSize: CGSize(width: thumbRadius, height: thumbRadius))
             .padding(.horizontal, horizontalPadding)
+    }
+}
+
+struct AZSlider_Previews: PreviewProvider {
+    static var previews: some View {
+        AZSlider_Previews_Container()
     }
 }
