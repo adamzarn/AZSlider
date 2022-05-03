@@ -10,13 +10,15 @@ import SwiftUI
 public struct AZSlider<Value: BinaryFloatingPoint,
                        Track: View,
                        Fill: View,
-                       Thumb: View>: View where Value.Stride: BinaryFloatingPoint {
+                       Thumb: View,
+                       MinLabel: View,
+                       MaxLabel: View>: View where Value.Stride: BinaryFloatingPoint {
     
     @Binding var value: Value
     let bounds: ClosedRange<Value>
     let step: Value
-    let minimumValueLabel: Text?
-    let maximumValueLabel: Text?
+    let minimumValueLabel: (() -> MinLabel)?
+    let maximumValueLabel:(() -> MaxLabel)?
     let didStartDragging: ((_ value: Value) -> Void)?
     let didStopDragging: ((_ value: Value) -> Void)?
     let track: () -> Track
@@ -33,8 +35,8 @@ public struct AZSlider<Value: BinaryFloatingPoint,
     public init(value: Binding<Value>,
                 in bounds: ClosedRange<Value>,
                 step: Value = 0.001,
-                minimumValueLabel: Text? = nil,
-                maximumValueLabel: Text? = nil,
+                minimumValueLabel: (() -> MinLabel)? = nil,
+                maximumValueLabel: (() -> MaxLabel)? = nil,
                 didStartDragging: ((_ value: Value) -> Void)? = nil,
                 didStopDragging: ((_ value: Value) -> Void)? = nil,
                 track: @escaping () -> Track,
@@ -81,7 +83,6 @@ public struct AZSlider<Value: BinaryFloatingPoint,
                 labels
             }
         }
-        .frame(height: max(trackSize.height, thumbSize.height))
     }
     
     var slider: some View {
@@ -121,9 +122,9 @@ public struct AZSlider<Value: BinaryFloatingPoint,
     
     var labels: some View {
         HStack {
-            minimumValueLabel.padding(.vertical, 4)
+            minimumValueLabel?()
             Spacer()
-            maximumValueLabel.padding(.vertical, 4)
+            maximumValueLabel?()
         }
     }
     
@@ -170,8 +171,12 @@ struct AZSlider_Previews_Container: View {
     var body: some View {
         AZSlider(value: $value,
                  in: 0...100,
-                 minimumValueLabel: Text("0").font(.caption),
-                 maximumValueLabel: Text("100").font(.caption),
+                 minimumValueLabel: {
+            Text("0").font(.caption)
+        },
+                 maximumValueLabel: {
+            Text("100").font(.caption)
+        },
                  track: {
                 Capsule()
                     .foregroundColor(.gray)
